@@ -50,8 +50,8 @@ export async function scrapeAndSummarise(url: string) {
     await client.close()
 
     return { summary, translated }
-  } catch (err: any) {
-    console.error('Error:', err.message)
+  } catch (err) {
+    console.error('Error:', (err as Error).message)
     return { summary: 'Error scraping blog.', translated: 'خرابی ہوگئی ہے۔' }
   }
 }
