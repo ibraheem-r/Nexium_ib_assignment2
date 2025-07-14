@@ -14,7 +14,6 @@ export async function POST(req: Request) {
 
     const $ = cheerio.load(data)
 
-    
     const paragraphs = $('p')
       .map((_, el) => $(el).text())
       .get()
@@ -23,7 +22,8 @@ export async function POST(req: Request) {
     const text = paragraphs.trim().slice(0, 2000) // limit length
 
     return NextResponse.json({ success: true, text })
-  } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 })
+  } catch (err) {
+    const error = err as Error
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 })
   }
 }
