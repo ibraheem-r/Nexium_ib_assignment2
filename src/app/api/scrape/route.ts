@@ -2,15 +2,20 @@ import { NextResponse } from 'next/server'
 import axios from 'axios'
 import * as cheerio from 'cheerio'
 
+export const runtime = 'nodejs'
 export async function POST(req: Request) {
   const { url } = await req.json()
+  console.log('Received URL:', url)
 
   try {
     const { data } = await axios.get(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+    'Accept': 'text/html,application/xhtml+xml'
       },
     })
+
+    console.log('Fetched HTML length:', data.length)
 
     const $ = cheerio.load(data)
 
@@ -29,4 +34,6 @@ export async function POST(req: Request) {
       { status: 500 }
     )
   }
+  
 }
+
