@@ -1,11 +1,13 @@
 'use client'
-
 import { useState, useTransition } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import { scrapeAndSummarise } from '@/actions/summarise'
+import { Moon, Sun } from 'lucide-react'
+import { useTheme } from 'next-themes'
+import Spinner from '@/components/ui/spinner'
 
 export default function Home() {
   const [url, setUrl] = useState('')
@@ -13,8 +15,9 @@ export default function Home() {
   const [summaryUrdu, setSummaryUrdu] = useState('')
   const [loading, startTransition] = useTransition()
 
+  const { theme, setTheme } = useTheme()
+
   const handleSummarise = () => {
-    if (!url) return alert('Please enter a blog URL.')
     startTransition(async () => {
       const { summary, translated } = await scrapeAndSummarise(url)
       setSummary(summary)
@@ -23,36 +26,66 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-2xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold text-center">📝 Blog Summariser</h1>
-        <p className="text-center text-gray-500">Enter a blog URL to summarise and translate.</p>
+    <main className="min-h-screen flex items-center justify-center p-6 bg-background text-foreground transition-colors">
+    
+      <div className="max-w-2xl w-full space-y-6">
 
-        <div className="flex gap-2">
-          <Input
-            placeholder="Paste blog URL here..."
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            className="flex-1"
-          />
-          <Button onClick={handleSummarise} disabled={loading}>
-            {loading ? 'Summarising...' : 'Summarise'}
+        <div className="flex justify-between items-center">
+        <h1 className="text-5xl font-extrabold tracking-tight bg-gradient-to-r from-rose-500 via-fuchsia-500 to-indigo-500 text-transparent bg-clip-text drop-shadow-md">
+  Shortr
+</h1>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          >
+            {theme === 'dark' ? <Sun /> : <Moon />}
           </Button>
         </div>
 
+        <p className="text-muted-foreground">
+          Paste any blog URL and get a brief summary.
+        </p>
+
+        <div className="flex items-center space-x-2">
+          <Input
+            className="flex-1"
+            placeholder="Enter blog URL"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+          />
+          <Button
+  className="bg-gradient-to-r from-fuchsia-500 to-indigo-500 text-white shadow-lg hover:opacity-90 transition"
+  onClick={handleSummarise}
+  disabled={loading}
+>
+  {loading ? (
+    <div className="flex items-center space-x-2">
+      <Spinner />
+      <span>Summarising...</span>
+    </div>
+  ) : (
+    'Summarise'
+  )}
+</Button>
+        </div>
+
         {summary && (
-          <Card>
-            <CardContent className="p-4 space-y-4">
-              <div>
-                <h2 className="text-lg font-semibold">📄 Summary (English)</h2>
-                <Textarea value={summary} readOnly className="h-32" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold">🌐 Summary (Urdu)</h2>
-                <Textarea value={summaryUrdu} readOnly className="h-32" />
-              </div>
-            </CardContent>
-          </Card>
+          <div className="space-y-4">
+            <Card>
+              <CardContent className="p-4 space-y-2">
+                <h2 className="font-semibold text-lg"> Summary (English)</h2>
+                <Textarea className="text-sm" value={summary} readOnly />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4 space-y-2">
+                <h2 className="font-semibold text-lg"> Summary (Urdu)</h2>
+                <Textarea dir="rtl" className="text-right text-sm" value={summaryUrdu} readOnly />
+              </CardContent>
+            </Card>
+          </div>
         )}
       </div>
     </main>
