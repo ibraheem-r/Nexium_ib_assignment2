@@ -19,11 +19,14 @@ export async function POST(req: Request) {
       .get()
       .join(' ')
 
-    const text = paragraphs.trim().slice(0, 2000) // limit length
+    const text = paragraphs.trim().slice(0, 2000)
 
     return NextResponse.json({ success: true, text })
   } catch (err) {
     const error = err as Error
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 })
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    )
   }
 }
