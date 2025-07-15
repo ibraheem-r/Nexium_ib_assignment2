@@ -1,3 +1,4 @@
+App runs locally but privacy ans ssl locks on urls makes it difficult to scrape on vercel
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
