@@ -26,7 +26,10 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-6 bg-background text-foreground transition-colors">
+    <main
+  className="min-h-screen flex items-center justify-center p-6 text-foreground transition-colors bg-cover bg-center"
+  style={{ backgroundImage: 'url("/bg.jpg")' }}
+>
     
       <div className="max-w-2xl w-full space-y-6">
 
